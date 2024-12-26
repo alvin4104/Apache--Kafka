@@ -1,0 +1,3 @@
+# Run ZookyConsumer.java
+bin/kafka-console-producer.sh --bootstrap-server kafkahost:9092 --topic zooky_revenue
+Received: Th�is�ere �are products (shorts, h�ats,jeans) for Z�ooky Company
