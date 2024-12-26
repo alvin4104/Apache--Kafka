@@ -1,0 +1,4 @@
+hdfs namenode -format
+hdfs dfs -mkdir /user
+hdfs dfs -mkdir /user/hadoop
+hdfs dfs -mkdir /user/hadoop/zooky_revenue
