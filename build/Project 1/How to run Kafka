@@ -9,4 +9,4 @@ bin/zkCli.sh
 
 cd/home/alvinnguyen41/kafka
 bin/kafka-server-start.sh config/server.properties
-bin/kafka-topics.sh --create --topic zooky_revenue --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+bin/kafka-topics.sh --create --topic zooky_revenue --bootstrap-server kafkahost:9092 --replication-factor 1 --partitions 1
