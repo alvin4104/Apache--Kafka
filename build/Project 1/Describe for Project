@@ -1,0 +1,141 @@
+Project: Zooky Sports Store Management System
+Project Overview
+Zooky Sports is a chain of retail stores selling sports products across multiple cities in the United States. With a large volume of transactions daily, managing real-time data is crucial to ensure operational efficiency and optimize business performance. Apache Kafka serves as the core technology in this system, enabling real-time data collection, processing, and analysis from all stores.
+
+System Details Using Apache Kafka
+1. Kafka System Architecture
+The system is designed with three main components:
+
+Producers: Sources that send transaction data from each store to Kafka.
+Topics: Intermediate channels in Kafka where data is temporarily stored before being processed.
+Consumers: Components that process and consume data from Topics, such as storing it in a database or providing it to analytics tools.
+2. Data Design
+Transaction data is transmitted in JSON format with the following fields:
+
+transaction_id: Unique transaction identifier.
+store_id: Identifier of the store where the transaction occurred.
+product_id: Identifier of the sold product.
+product_name: Name of the product.
+quantity_sold: Number of products sold.
+price_per_unit: Price per unit of the product.
+total_revenue: Total revenue from the transaction (quantity_sold * price_per_unit).
+timestamp: Time of the transaction.
+Sample Data:
+
+json
+Copy code
+{
+  "transaction_id": "TXN12345",
+  "store_id": "STORE001",
+  "product_id": "PRD56789",
+  "product_name": "Soccer Ball",
+  "quantity_sold": 3,
+  "price_per_unit": 25.00,
+  "total_revenue": 75.00,
+  "timestamp": "2024-12-28T14:25:00Z"
+}
+3. Kafka Data Processing Workflow
+Data from Producers:
+
+Each store sends transaction data in real-time to the Kafka Topic zooky_revenue.
+Data is sent in JSON format.
+Kafka Topic:
+
+Topic Name: zooky_revenue
+Partitioning: Data is partitioned by store_id to ensure load balancing.
+Replication Factor: 3, to guarantee high availability.
+Consumers:
+
+Consumer 1: Saves the data to a database (MySQL/PostgreSQL) for reporting purposes.
+Consumer 2: Performs real-time data analysis, such as identifying best-selling products.
+Consumer 3: Generates automatic alerts if sales drop unexpectedly or inventory is low.
+4. Real-Time Inventory Management
+Data from Kafka Consumers integrates with the inventory management system to:
+Automatically deduct inventory for each transaction.
+Alert for restocking when inventory levels fall below a defined threshold.
+5. Reporting and Analytics
+Daily Reports: Aggregates revenue and product sales by store.
+Real-Time Analysis: Uses tools like Tableau or Power BI to provide insights on sales trends and product performance.
+
+
+6. Integration with Other Systems
+Payment System Integration
+Kafka connects with the payment gateway for seamless processing.
+Transaction Status: Kafka records whether a transaction is successful, failed, or pending.
+Topic: zooky_payments.
+Example JSON data:
+json
+Copy code
+{
+  "transaction_id": "TXN12345",
+  "payment_status": "SUCCESS",
+  "payment_method": "CREDIT_CARD",
+  "amount": 75.00,
+  "timestamp": "2024-12-28T14:26:00Z"
+}
+Customer Feedback
+After every purchase, customers provide feedback, which is ingested into Kafka.
+Feedback Topic: zooky_feedback.
+Example JSON:
+json
+Copy code
+{
+  "transaction_id": "TXN12345",
+  "customer_id": "CUST9876",
+  "feedback": "The soccer ball was of great quality!",
+  "rating": 5,
+  "timestamp": "2024-12-28T15:00:00Z"
+}
+Consumer Actions:
+Store feedback in a database for performance reviews.
+Trigger alerts for low ratings or recurring complaints.
+7. Monitoring and Scaling
+Kafka Monitoring
+Tools Used:
+
+Kafka Manager: Monitors partitions, replication, and topic health.
+Prometheus + Grafana: Provides dashboards for metrics like throughput, lag, and errors.
+Key Metrics:
+
+Producer Throughput: How much data producers are sending per second.
+Consumer Lag: Delays in processing messages from Topics.
+Partition Distribution: Ensures data is evenly distributed across partitions.
+Scaling Strategy
+Producers:
+Scale by adding new producers for high-traffic stores.
+Kafka Brokers:
+Increase broker count when Topics exceed current capacity.
+Consumers:
+Scale consumers horizontally by creating consumer groups for heavy workloads like analytics.
+8. Security
+Authentication & Authorization
+SASL/SSL: Encrypts communication between Producers, Kafka Brokers, and Consumers.
+Access Control Lists (ACLs):
+Producers can only write to specific Topics.
+Consumers can only read from authorized Topics.
+Data Backup
+Kafka topics use a replication factor of 3 for high availability.
+Periodic backups are created using Apache Flink or a custom backup service.
+9. Advanced Use Cases
+Dynamic Pricing
+Kafka analyzes real-time sales trends and triggers price updates:
+E.g., Increase prices for best-sellers during peak demand.
+Topic: zooky_pricing.
+Fraud Detection
+Kafka streams detect suspicious activities like:
+Multiple transactions in short intervals from the same store.
+Inconsistent pricing or inventory levels.
+Alerts sent to the zooky_alerts Topic for investigation.
+Predictive Analytics
+Consumer integration with machine learning models to predict:
+Future best-sellers.
+Inventory requirements for the next quarter.
+10. Benefits of Using Kafka
+Real-Time Data Flow:
+Enables instant processing of transactions and inventory updates.
+Scalability:
+Handles high transaction volumes across multiple stores.
+Decoupled Architecture:
+Producers and Consumers operate independently, ensuring fault tolerance.
+Flexibility:
+Multiple Consumers for analytics, inventory, and reporting from the same Topic.
